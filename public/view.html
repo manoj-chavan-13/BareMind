@@ -9,27 +9,29 @@
 </head>
 
 <body class="bg-gray-100">
-    <div class="flex h-screen">
-<div class="bg-white text-gray-800 w-64 p-5 shadow-lg rounded-lg">
-    <div class="flex items-center mb-6">
-        <img src="logo.jpeg" alt="Logo" class="h-12 w-12 rounded-md"> <!-- Logo image path -->
-        <h1 class="text-3xl font-bold text-gray-800 ml-2">BareMind</h1> <!-- Changed text color -->
-    </div>
-    <ul class="mt-4">
-        <li class="mb-4">
-            <a href="index.html"
-                class="block hover:bg-gray-100 text-gray-700 p-2 rounded transition duration-200">Dashboard</a>
-            <!-- Changed link text and color -->
-        </li>
-        <li class="mb-4">
-            <a href="post.html" class="block hover:bg-gray-100 text-gray-700 p-2 rounded transition duration-200">New
-                Blog Post</a> <!-- Changed link text and color -->
-        </li>
-    </ul>
-</div>
+    <div class="flex flex-col md:flex-row h-screen">
+        <!-- Sidebar -->
+        <div
+            class="bg-white text-gray-800 w-full md:w-64 p-5 shadow-lg rounded-lg md:rounded-none md:shadow-none md:h-screen">
+            <div class="flex items-center mb-6">
+                <img src="logo.jpeg" alt="Logo" class="h-12 w-12 rounded-md">
+                <h1 class="text-3xl font-bold text-gray-800 ml-2">BareMind</h1>
+            </div>
+            <ul class="mt-4">
+                <li class="mb-4">
+                    <a href="index.html"
+                        class="block hover:bg-gray-100 text-gray-700 p-2 rounded transition duration-200">Dashboard</a>
+                </li>
+                <li class="mb-4">
+                    <a href="post.html"
+                        class="block hover:bg-gray-100 text-gray-700 p-2 rounded transition duration-200">New Blog
+                        Post</a>
+                </li>
+            </ul>
+        </div>
 
         <!-- Main Content -->
-        <div class="flex-1 p-10 overflow-y-auto">
+        <div class="flex-1 p-5 overflow-y-auto">
             <div class="container mx-auto p-5">
                 <div id="postDetail" class="bg-white shadow-md rounded-lg p-5"></div>
             </div>
@@ -37,13 +39,14 @@
     </div>
 
     <script>
-                function checkLogin() {
-                        const token = localStorage.getItem('userToken'); // Get token from local storage
-                        if (!token) {
-                            // If no token, redirect to login page
-                            window.location.href = 'login.html'; // Change to your login page URL
-                        }
-                    }
+        function checkLogin() {
+            const token = localStorage.getItem('userToken'); // Get token from local storage
+            if (!token) {
+                // If no token, redirect to login page
+                window.location.href = 'login.html'; // Change to your login page URL
+            }
+        }
+
         // Fetch the specific post details based on ID
         async function fetchPostDetails() {
             const queryString = window.location.search;
@@ -56,11 +59,12 @@
 
             postDetail.innerHTML = `
                 <h2 class="text-3xl font-semibold">${post.title}</h2>
-                <img src="${post.image}" alt="${post.title}" class="mt-4 mb-4 w-full h-64 object-cover rounded-lg" />
+                <img src="${post.image}" alt="${post.title}" class="mt-4 mb-4 w-full h-auto object-cover rounded-lg" />
                 <p class="mt-2">${post.content}</p>
             `;
         }
-    checkLogin() 
+
+        checkLogin();
         // Call fetchPostDetails when the page loads
         fetchPostDetails();
     </script>

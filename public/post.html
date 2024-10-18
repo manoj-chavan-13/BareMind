@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BareMind</title>
-    <!-- Tailwind CSS CDN -->
+    <title>BareMind</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script><!-- Tailwind CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         #myImage {
@@ -20,28 +21,28 @@
 </head>
 
 <body class="bg-gray-100">
-    <div class="flex h-screen">
+    <div class="flex flex-col lg:flex-row h-screen">
         <!-- Sidebar -->
-<div class="bg-white text-gray-800 w-64 p-5 shadow-lg rounded-lg">
-    <div class="flex items-center mb-6">
-        <img src="logo.jpeg" alt="Logo" class="h-12 w-12 rounded-md"> <!-- Logo image path -->
-        <h1 class="text-3xl font-bold text-gray-800 ml-2">BareMind</h1> <!-- Changed text color -->
-    </div>
-    <ul class="mt-4">
-        <li class="mb-4">
-            <a href="index.html"
-                class="block hover:bg-gray-100 text-gray-700 p-2 rounded transition duration-200">Dashboard</a>
-            <!-- Changed link text and color -->
-        </li>
-        <li class="mb-4">
-            <a href="post.html" class="block hover:bg-gray-100 text-gray-700 p-2 rounded transition duration-200">New
-                Blog Post</a> <!-- Changed link text and color -->
-        </li>
-    </ul>
-</div>
+        <div class="bg-white text-gray-800 w-full lg:w-64 p-5 shadow-lg rounded-lg">
+            <div class="flex items-center mb-6">
+                <img src="logo.jpeg" alt="Logo" class="h-12 w-12 rounded-md"> <!-- Logo image path -->
+                <h1 class="text-3xl font-bold text-gray-800 ml-2">BareMind</h1> <!-- Changed text color -->
+            </div>
+            <ul class="mt-4">
+                <li class="mb-4">
+                    <a href="index.html"
+                        class="block hover:bg-gray-100 text-gray-700 p-2 rounded transition duration-200">Dashboard</a>
+                </li>
+                <li class="mb-4">
+                    <a href="post.html"
+                        class="block hover:bg-gray-100 text-gray-700 p-2 rounded transition duration-200">New Blog
+                        Post</a>
+                </li>
+            </ul>
+        </div>
 
         <!-- Main Content -->
-        <div class="flex-1 p-10 overflow-y-auto">
+        <div class="flex-1 p-5 lg:p-10 overflow-y-auto">
             <h2 class="text-3xl font-semibold mb-8">Upload Image and Blog Post</h2>
             <div id="upload-section" class="bg-white shadow-lg rounded-lg p-8 border border-gray-300">
                 <input type="file" id="fileInput"
@@ -71,8 +72,7 @@
 
                     <button type="submit"
                         class="bg-green-500 text-white rounded-lg p-2 w-full hover:bg-green-600 transition duration-300">Submit
-                        Blog
-                        Post</button>
+                        Blog Post</button>
                 </form>
                 <div id="message" class="mt-4 text-center text-green-500 font-semibold"></div>
             </div>
@@ -80,13 +80,13 @@
     </div>
 
     <script type="module">
-            function checkLogin() {
-                const token = localStorage.getItem('userToken'); // Get token from local storage
-                if (!token) {
-                    // If no token, redirect to login page
-                    window.location.href = 'login.html'; // Change to your login page URL
-                }
+        function checkLogin() {
+            const token = localStorage.getItem('userToken'); // Get token from local storage
+            if (!token) {
+                // If no token, redirect to login page
+                window.location.href = 'login.html'; // Change to your login page URL
             }
+        }
 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
         import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
@@ -169,15 +169,25 @@
                     document.getElementById('myImage').classList.add('hidden');
                     document.getElementById('image').value = '';
                 } else {
-                    alert("Failed to upload blog post: " + result.message);
+                                   Swal.fire({
+                        title: 'Failed',
+                        text: 'Failed to post Blog.',
+                        icon: 'error',
+                        confirmButtonText: 'ohk',
+                    })
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert("An error occurred while uploading the blog post.");
+                 Swal.fire({
+                    title: 'Error',
+                    text: 'Failed to post Blog.',
+                    icon: 'error',
+                    confirmButtonText: 'ohk',
+                })
             }
         });
 
-        checkLogin() 
+        checkLogin()
     </script>
 </body>
 

@@ -31,9 +31,9 @@
 </head>
 
 <body class="bg-gray-100">
-    <div class="flex h-screen">
+    <div class="flex flex-col md:flex-row h-screen">
         <!-- Sidebar -->
-        <div class="bg-white text-gray-800 w-64 p-5 shadow-lg rounded-lg">
+        <div class="bg-white text-gray-800 w-full md:w-64 p-5 shadow-lg rounded-lg">
             <div class="flex items-center mb-6">
                 <img src="logo.jpeg" alt="Logo" class="h-12 w-12 rounded-md"> <!-- Logo image path -->
                 <h1 class="text-3xl font-bold text-gray-800 ml-2">BareMind</h1>
@@ -52,10 +52,10 @@
         </div>
 
         <!-- Main Content -->
-        <div class="flex-1 p-10 overflow-y-auto main-content">
+        <div class="flex-1 p-5 md:p-10 overflow-y-auto main-content">
             <div class="bg-text font-extrabold text-9xl">BareMind</div> <!-- Background Text -->
             <h1 class="text-4xl font-bold mb-5 relative z-50">Blog Posts</h1> <!-- Added relative z-10 -->
-            <div id="postList" class="grid z-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+            <div id="postList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 z-10"></div>
         </div>
     </div>
 
