@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 app.use(express.static("public")); // Serve static files from the 'public' directory
 
 // Use blog routes
-app.use("/api/blogs", blogRoutes);
+app.use("/", blogRoutes);
 app.use("/posts", postRoutes);
 // Serve the HTML file at the root route
 app.get("/", (req, res) => {
