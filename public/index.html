@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Post Upload</title>
+    <title>Upload Image to Firebase and Blog Post</title>
     <style>
         * {
             box-sizing: border-box;
@@ -71,7 +71,12 @@
 
 <body>
     <div class="container">
-        <h1>Upload a Blog Post</h1>
+        <h1>Upload Image and Blog Post</h1>
+        <input type="file" id="fileInput" />
+        <button onclick="uploadImage()">Upload Image</button>
+        <img id="myImage" src="" alt="Image" style="max-width: 500px; margin-top: 20px;" />
+        <p id="imageUrl"></p>
+
         <form id="blog-form">
             <label for="title">Title:</label>
             <input type="text" id="title" required>
@@ -83,14 +88,63 @@
             <textarea id="content" rows="5" required></textarea>
 
             <label for="image">Image URL:</label>
-            <input type="text" id="image" required>
+            <input type="text" id="image" required readonly>
 
-            <button type="submit">Submit</button>
+            <button type="submit">Submit Blog Post</button>
         </form>
         <div id="message"></div>
     </div>
 
-    <script>
+    <!-- Use type="module" to support ES Modules -->
+    <script type="module">
+        // Import necessary functions from Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAjQGyVcUzWoE4FwfcF34gNQ6SY_RXJRZk",
+            authDomain: "minta-mn.firebaseapp.com",
+            projectId: "minta-mn",
+            storageBucket: "minta-mn.appspot.com",
+            messagingSenderId: "154832924750",
+            appId: "1:154832924750:web:149aab20750699dd7d931f"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const storage = getStorage(app);
+
+        window.uploadImage = async function () {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            // Create a reference to the storage location
+            const storageRef = ref(storage, `images/${file.name}`);
+
+            // Upload the file
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    // Optional: Handle progress
+                },
+                (error) => {
+                    console.error('Upload failed:', error);
+                },
+                async () => {
+                    // Get the download URL
+                    const url = await getDownloadURL(uploadTask.snapshot.ref);
+                    document.getElementById('myImage').src = url;
+                    document.getElementById('imageUrl').textContent = url;
+
+                    // Set the image URL in the blog post form
+                    document.getElementById('image').value = url;
+                }
+            );
+        }
+
         document.getElementById("blog-form").addEventListener("submit", async function (event) {
             event.preventDefault(); // Prevent the default form submission
 
@@ -98,6 +152,12 @@
             const excerpt = document.getElementById("excerpt").value;
             const content = document.getElementById("content").value;
             const image = document.getElementById("image").value;
+
+            // Check if the image URL is present before posting
+            if (!image) {
+                alert("Please upload an image first.");
+                return;
+            }
 
             // Create a blog post object
             const blogPost = {
@@ -121,6 +181,8 @@
                 if (response.ok) {
                     document.getElementById("message").innerText = "Blog post uploaded successfully!";
                     document.getElementById("blog-form").reset(); // Reset the form
+                    document.getElementById('myImage').src = ''; // Clear the image preview
+                    document.getElementById('image').value = ''; // Clear the image URL field
                 } else {
                     throw new Error("Failed to upload blog post.");
                 }
