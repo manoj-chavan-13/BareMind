@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BareMind</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+<div class="bg-white text-gray-800 w-64 p-5 shadow-lg rounded-lg">
+    <div class="flex items-center mb-6">
+        <img src="logo.jpeg" alt="Logo" class="h-12 w-12 rounded-md"> <!-- Logo image path -->
+        <h1 class="text-3xl font-bold text-gray-800 ml-2">BareMind</h1> <!-- Changed text color -->
+    </div>
+    <ul class="mt-4">
+        <li class="mb-4">
+            <a href="index.html"
+                class="block hover:bg-gray-100 text-gray-700 p-2 rounded transition duration-200">Dashboard</a>
+            <!-- Changed link text and color -->
+        </li>
+        <li class="mb-4">
+            <a href="post.html" class="block hover:bg-gray-100 text-gray-700 p-2 rounded transition duration-200">New
+                Blog Post</a> <!-- Changed link text and color -->
+        </li>
+    </ul>
+</div>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-10">
+            <div class="container mx-auto overflow-y-auto p-4">
+                <h1 class="text-3xl font-bold text-center mb-6">Update Blog Post</h1>
+                <form id="updateForm" class="bg-white p-4 rounded shadow-md mb-6">
+                    <input type="hidden" id="postId" value="">
+                    <div class="mb-4">
+                        <label class="block text-gray-700">Title:</label>
+                        <input type="text" id="title" required class="mt-1 p-2 border rounded w-full"
+                            placeholder="Enter blog title">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700">Excerpt:</label>
+                        <input type="text" id="excerpt" required class="mt-1 p-2 border rounded w-full"
+                            placeholder="Enter blog excerpt">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700">Content:</label>
+                        <textarea id="content" required class="mt-1 p-2 border rounded w-full" rows="4"
+                            placeholder="Enter blog content"></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700">Image URL:</label>
+                        <input type="text" id="image" required class="mt-1 p-2 border rounded w-full"
+                            placeholder="Enter image URL">
+                    </div>
+                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded">Update Post</button>
+                </form>
+           </div>
+        </div>
+    </div>
+
+    <script>
+                function checkLogin() {
+                        const token = localStorage.getItem('userToken'); // Get token from local storage
+                        if (!token) {
+                            // If no token, redirect to login page
+                            window.location.href = 'login.html'; // Change to your login page URL
+                        }
+                    }
+        const updateForm = document.getElementById('updateForm');
+
+        // Fetch the post details if updating
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const postId = urlParams.get('id');
+
+        if (postId) {
+            fetchPostDetails(postId);
+        }
+
+        async function fetchPostDetails(id) {
+            const response = await fetch(`/posts/${id}`);
+            const post = await response.json();
+
+            document.getElementById('postId').value = post._id;
+            document.getElementById('title').value = post.title;
+            document.getElementById('excerpt').value = post.excerpt;
+            document.getElementById('content').value = post.content;
+            document.getElementById('image').value = post.image;
+        }
+
+        // Handle form submission for updating
+        updateForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const updatedData = {
+                title: document.getElementById('title').value,
+                excerpt: document.getElementById('excerpt').value,
+                content: document.getElementById('content').value,
+                image: document.getElementById('image').value,
+            };
+
+            // PUT request to update the blog post
+            await fetch(`/posts/${postId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedData),
+            });
+
+            alert('Blog post updated successfully!');
+            window.location.href = `view.html?id=${postId}`;  // Redirect to view page
+        };
+
+        checkLogin() 
+    </script>
+</body>
+
+</html>

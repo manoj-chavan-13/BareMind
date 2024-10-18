@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BareMind</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* Custom styles */
+        body {
+            background: linear-gradient(to right, #ffffff, #fff9f6);
+            /* Orange gradient */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+        }
+
+        .bg-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20rem;
+            color: rgba(255, 119, 0, 0.982);
+            white-space: nowrap;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body class="flex items-center justify-center h-screen">
+    <div class="bg-text font-extrabold text-9xl">BareMind</div> <!-- Background Text -->
+    <div class="form-container p-10 rounded-lg shadow-lg w-96 z-10"> <!-- Add z-10 to keep the form above the text -->
+        <h1 class="text-3xl font-bold mb-6 text-gray-800 text-center">Welcome Developer!</h1>
+        <p class="text-center mb-4 text-gray-600">We welcome you to your secret place.</p>
+        <form id="loginForm">
+            <div class="mb-4">
+                <label for="username" class="block text-gray-700">Username</label>
+                <input type="text" id="username"
+                    class="border border-gray-300 rounded-lg w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    autocomplete="username" required>
+            </div>
+            <div class="mb-6">
+                <label for="password" class="block text-gray-700">Password</label>
+                <input type="password" id="password"
+                    class="border border-gray-300 rounded-lg w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    autocomplete="current-password" required>
+            </div>
+            <button type="submit"
+                class="bg-orange-600 text-white px-4 py-2 rounded-lg w-full hover:bg-orange-700 transition duration-300">Login</button>
+        </form>
+      
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Send credentials to the server
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
+
+            const result = await response.json();
+            console.log(result);
+            if (result.success) {
+                localStorage.setItem('userToken', result.token);
+
+                // Display welcome pop-up
+                Swal.fire({
+                    title: 'Welcome to the Dashboard!',
+                    text: 'You have successfully logged in.',
+                    icon: 'success',
+                    confirmButtonText: 'Proceed',
+                }).then(() => {
+                    window.location.href = 'index.html'; // Redirect to the main page
+                });
+            } else {
+                // Optionally, show error message in a different way
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Invalid credentials, please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'Retry',
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

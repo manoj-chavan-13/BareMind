@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BareMind</title>
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        #myImage {
+            max-width: 100%;
+            height: auto;
+        }
+
+        #message {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+<div class="bg-white text-gray-800 w-64 p-5 shadow-lg rounded-lg">
+    <div class="flex items-center mb-6">
+        <img src="logo.jpeg" alt="Logo" class="h-12 w-12 rounded-md"> <!-- Logo image path -->
+        <h1 class="text-3xl font-bold text-gray-800 ml-2">BareMind</h1> <!-- Changed text color -->
+    </div>
+    <ul class="mt-4">
+        <li class="mb-4">
+            <a href="index.html"
+                class="block hover:bg-gray-100 text-gray-700 p-2 rounded transition duration-200">Dashboard</a>
+            <!-- Changed link text and color -->
+        </li>
+        <li class="mb-4">
+            <a href="post.html" class="block hover:bg-gray-100 text-gray-700 p-2 rounded transition duration-200">New
+                Blog Post</a> <!-- Changed link text and color -->
+        </li>
+    </ul>
+</div>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-10 overflow-y-auto">
+            <h2 class="text-3xl font-semibold mb-8">Upload Image and Blog Post</h2>
+            <div id="upload-section" class="bg-white shadow-lg rounded-lg p-8 border border-gray-300">
+                <input type="file" id="fileInput"
+                    class="mb-4 border border-gray-300 rounded-lg p-2 w-full bg-gray-50" />
+                <button onclick="uploadImage()"
+                    class="mb-4 bg-blue-500 text-white rounded-lg p-2 w-full hover:bg-blue-600 transition duration-300">Upload
+                    Image</button>
+                <img id="myImage" src="" alt="Image Preview" class="hidden h-96 w-auto mb-4 rounded-lg shadow-md" />
+                <p id="imageUrl" class="mb-4 text-center text-gray-600"></p>
+
+                <form id="blog-form">
+                    <label for="title" class="block mb-1 text-gray-700 font-semibold">Title:</label>
+                    <input type="text" id="title" required
+                        class="mb-4 border border-gray-300 rounded-lg p-2 w-full bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                    <label for="excerpt" class="block mb-1 text-gray-700 font-semibold">Excerpt:</label>
+                    <input type="text" id="excerpt" required
+                        class="mb-4 border border-gray-300 rounded-lg p-2 w-full bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                    <label for="content" class="block mb-1 text-gray-700 font-semibold">Content:</label>
+                    <textarea id="content" rows="5" required
+                        class="mb-4 border border-gray-300 rounded-lg p-2 w-full bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+
+                    <label for="image" class="block mb-1 text-gray-700 font-semibold">Image URL:</label>
+                    <input type="text" id="image" required readonly
+                        class="mb-4 border border-gray-300 rounded-lg p-2 w-full bg-gray-100" />
+
+                    <button type="submit"
+                        class="bg-green-500 text-white rounded-lg p-2 w-full hover:bg-green-600 transition duration-300">Submit
+                        Blog
+                        Post</button>
+                </form>
+                <div id="message" class="mt-4 text-center text-green-500 font-semibold"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+            function checkLogin() {
+                const token = localStorage.getItem('userToken'); // Get token from local storage
+                if (!token) {
+                    // If no token, redirect to login page
+                    window.location.href = 'login.html'; // Change to your login page URL
+                }
+            }
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAjQGyVcUzWoE4FwfcF34gNQ6SY_RXJRZk",
+            authDomain: "minta-mn.firebaseapp.com",
+            projectId: "minta-mn",
+            storageBucket: "minta-mn.appspot.com",
+            messagingSenderId: "154832924750",
+            appId: "1:154832924750:web:149aab20750699dd7d931f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const storage = getStorage(app);
+
+        window.uploadImage = async function () {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const storageRef = ref(storage, `images/${file.name}`);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            uploadTask.on('state_changed',
+                (snapshot) => { },
+                (error) => { console.error('Upload failed:', error); },
+                async () => {
+                    const url = await getDownloadURL(uploadTask.snapshot.ref);
+                    const myImage = document.getElementById('myImage');
+                    myImage.src = url;
+                    myImage.classList.remove('hidden');
+                    document.getElementById('imageUrl').textContent = url;
+                    document.getElementById('image').value = url;
+                }
+            );
+        }
+
+        document.getElementById("blog-form").addEventListener("submit", async function (event) {
+            event.preventDefault();
+            const title = document.getElementById("title").value;
+            const excerpt = document.getElementById("excerpt").value;
+            const content = document.getElementById("content").value;
+            const image = document.getElementById("image").value;
+
+            if (!image) {
+                alert("Please upload an image first.");
+                return;
+            }
+
+            const blogPost = {
+                id: Date.now(), // Unique ID for the blog post
+                title,
+                excerpt,
+                content,
+                image,
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            // Send the blog post data to the server
+            try {
+                const response = await fetch('/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(blogPost)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                if (result._id) { // Check if an ID is returned, indicating a successful creation
+                    document.getElementById("message").innerText = "Blog post uploaded successfully!";
+                    document.getElementById("message").style.display = "block";
+                    document.getElementById("blog-form").reset();
+                    document.getElementById('myImage').src = '';
+                    document.getElementById('myImage').classList.add('hidden');
+                    document.getElementById('image').value = '';
+                } else {
+                    alert("Failed to upload blog post: " + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert("An error occurred while uploading the blog post.");
+            }
+        });
+
+        checkLogin() 
+    </script>
+</body>
+
+</html>

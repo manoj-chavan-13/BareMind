@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BareMind</title>
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="bg-gray-800 text-white w-64 p-5">
+            <h1 class="text-2xl font-bold mb-6">BAREMIND</h1>
+            <ul>
+                <li class="mb-4"><a href="index.html" class="hover:underline">Home</a></li>
+                <li class="mb-4"><a href="post.html" class="hover:underline">Create New Post</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-10">
+            <h2 class="text-3xl font-semibold mb-8">All Blogs</h2>
+            <div id="blogs" class="bg-white shadow-md rounded-lg p-5"></div>
+        </div>
+    </div>
+
+    <script>
+        let blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+
+        // Function to display blogs
+        function displayBlogs() {
+            const blogsContainer = document.getElementById("blogs");
+            blogsContainer.innerHTML = ""; // Clear the container
+
+            if (blogs.length === 0) {
+                blogsContainer.innerHTML = `<p class="text-gray-500">No blogs available.</p>`;
+                return;
+            }
+
+            blogs.forEach(blog => {
+                const blogDiv = document.createElement("div");
+                blogDiv.className = "border-b border-gray-300 pb-4 mb-4";
+                blogDiv.innerHTML = `
+                    <h3 class="text-xl font-bold">${blog.title}</h3>
+                    <p>${blog.excerpt}</p>
+                    <p class="text-gray-600"><img src="${blog.image}" class="max-w-full rounded-md" alt="Blog Image" /></p>
+                    <p>${blog.content}</p>
+                    <p class="text-gray-500">${new Date(blog.date).toLocaleDateString()}</p>
+                    <button class="mt-2 bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-600 transition" onclick="deleteBlog(${blog.id})">Delete</button>
+                    <button class="mt-2 ml-2 bg-yellow-500 text-white rounded-lg px-4 py-2 hover:bg-yellow-600 transition" onclick="editBlog(${blog.id})">Edit</button>
+                `;
+                blogsContainer.appendChild(blogDiv);
+            });
+        }
+
+        // Function to delete a blog
+        window.deleteBlog = function (id) {
+            blogs = blogs.filter(blog => blog.id !== id);
+            localStorage.setItem('blogs', JSON.stringify(blogs));
+            displayBlogs(); // Refresh the blog list
+        };
+
+        // Function to edit a blog
+        window.editBlog = function (id) {
+            const blog = blogs.find(blog => blog.id === id);
+            if (blog) {
+                // Redirect to the upload page with the blog data
+                localStorage.setItem('editBlog', JSON.stringify(blog));
+                window.location.href = "index.html";
+            }
+        };
+
+        // Display blogs on page load
+        displayBlogs();
+    </script>
+</body>
+
+</html>
