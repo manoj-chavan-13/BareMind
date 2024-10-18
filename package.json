@@ -1,0 +1,27 @@
+{
+  "name": "baremind",
+  "version": "1.0.0",
+  "description": "Backend for Baremind to handle the posts and like on that or comments and views also ...no such more use of this just get the post from mongodb ohh sorrry this also use to post the blog becose created a separete web to post to the blogs ..this integreates with both",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manoj-chavan-13/BareMind.git"
+  },
+  "author": "manoj chavan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/manoj-chavan-13/BareMind/issues"
+  },
+  "homepage": "https://github.com/manoj-chavan-13/BareMind#readme",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "mongoose": "^8.7.1"
+  }
+}
