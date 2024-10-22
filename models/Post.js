@@ -1,17 +1,3 @@
-import mongoose from "mongoose";
-
-// Comment schema
-const commentSchema = new mongoose.Schema({
-  content: {
-    type: String,
-    required: true,
-  },
-  date: {
-    type: Date,
-    default: Date.now,
-  },
-});
-
 // Blog schema
 const blogSchema = new mongoose.Schema({
   title: {
@@ -19,7 +5,8 @@ const blogSchema = new mongoose.Schema({
     required: true,
   },
   date: {
-    type: String, // Change to String to store date as 'YYYY-MM-DD'
+    type: String, // Storing date as 'YYYY-MM-DD'
+    required: true, // Ensure it's required for new posts
   },
   excerpt: {
     type: String,
@@ -44,11 +31,13 @@ const blogSchema = new mongoose.Schema({
   },
 });
 
-// Pre-save hook to format the date
+// Pre-save hook to set the date only if it is not already set
 blogSchema.pre("save", function (next) {
-  // Format date as 'YYYY-MM-DD'
-  const currentDate = new Date();
-  this.date = currentDate.toISOString().split("T")[0]; // Store date in 'YYYY-MM-DD' format
+  if (!this.date) {
+    // Only set the date if it hasn't been set yet
+    const currentDate = new Date();
+    this.date = currentDate.toISOString().split("T")[0]; // Store date in 'YYYY-MM-DD' format
+  }
   next();
 });
 
