@@ -21,7 +21,7 @@ export const getPostById = async (req, res) => {
     }
 
     // Optionally increment view count when the post is retrieved
-    post.viewCount += 1;
+    post.views += 1;
     await post.save();
 
     res.status(200).json(post); // Send the post as the response
