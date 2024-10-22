@@ -19,7 +19,7 @@ import subscriptionRoutes from "./routes/subscription.js";
 // Connect to MongoDB
 
 function authenticate(req, res, next) {
-  const password = req.headers["Authorization"]; // Get password from Authorization header
+  const password = req.headers["authorization"]; // Get password from Authorization header
   if (!password || password !== process.env.PERSONALPASSWORD) {
     return res.status(403).json({ message: "Forbidden: Invalid password" });
   }
