@@ -40,7 +40,7 @@ app.use(
   cors({
     origin: "https://baremind-in.vercel.app/", // Change to your React app's URL
     methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed methods
-    allowedHeaders: ["authorization", "Content-Type"], // Specify allowed headers
+    allowedHeaders: ["Authorization", "Content-Type"], // Specify allowed headers
   })
 );
 app.use(bodyParser.json());
