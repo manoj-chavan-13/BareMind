@@ -83,7 +83,12 @@
         }
 
         async function fetchPostDetails(id) {
-            const response = await fetch(`/posts/${id}`);
+           const response = await fetch(`/posts/${id}`, {
+                method: 'GET',
+                headers: {
+                      Authorization: "Nikita@me1311", // Include the token here
+                },
+            });
             const post = await response.json();
 
             document.getElementById('postId').value = post._id;
@@ -107,6 +112,7 @@
             await fetch(`/posts/${postId}`, {
                 method: 'PUT',
                 headers: {
+                     Authorization: "Nikita@me1311", 
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(updatedData),

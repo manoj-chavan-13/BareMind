@@ -17,6 +17,15 @@ const pass = "alwaysbare";
 const user = "131104NoDe";
 import subscriptionRoutes from "./routes/subscription.js";
 // Connect to MongoDB
+
+function authenticate(req, res, next) {
+  const password = req.headers["authorization"]; // Get password from Authorization header
+  if (!password || password !== process.env.PERSONALPASSWORD) {
+    return res.status(403).json({ message: "Forbidden: Invalid password" });
+  }
+  next();
+}
+
 mongoose
   .connect(DBURI, {
     useNewUrlParser: true,
@@ -32,30 +41,30 @@ app.use(express.static("public")); // Serve static files from the 'public' direc
 
 // Use blog routes
 app.use("/", blogRoutes);
-app.use("/posts", postRoutes);
-app.use("/v1/subscribe", subscriptionRoutes);
+app.use("/posts", authenticate, postRoutes);
+app.use("/v1/subscribe", authenticate, subscriptionRoutes);
 // Serve the HTML file at the root route
 app.get("/", (req, res) => {
   res.sendFile(path.resolve("public", "index.html")); // Serve index.html directly
 });
-app.get("/posts/:id", async (req, res) => {
+app.get("/posts/:id", authenticate, async (req, res) => {
   const post = await Blog.findById(req.params.id);
   res.json(post);
 });
 
-app.put("/posts/:id", async (req, res) => {
+app.put("/posts/:id", authenticate, async (req, res) => {
   const updatedPost = await Blog.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
   });
   res.json(updatedPost);
 });
 
-app.delete("/posts/:id", async (req, res) => {
+app.delete("/posts/:id", authenticate, async (req, res) => {
   await Blog.findByIdAndDelete(req.params.id);
   res.status(204).send();
 });
 
-app.post("/api/login", (req, res) => {
+app.post("/api/login", authenticate, (req, res) => {
   const { username, password } = req.body;
 
   // Check if the credentials match

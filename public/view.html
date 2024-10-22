@@ -53,7 +53,12 @@
             const urlParams = new URLSearchParams(queryString);
             const postId = urlParams.get('id');
 
-            const response = await fetch(`/posts/${postId}`);
+            const response = await fetch(`/posts/${postId}` ,{
+                headers: {
+                    Authorization: "Nikita@me1311",
+                   
+                }
+});
             const post = await response.json();
             const postDetail = document.getElementById('postDetail');
 

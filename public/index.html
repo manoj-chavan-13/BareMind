@@ -71,7 +71,12 @@
 
         // Fetch all posts and display them
         async function fetchPosts() {
-            const response = await fetch('/posts');
+            const response = await fetch('/posts' ,{
+                 headers: {
+                    Authorization: "Nikita@me1311",
+
+                }
+            });
             const posts = await response.json();
             const postList = document.getElementById('postList');
 
@@ -100,6 +105,10 @@
             if (confirmDelete) {
                 await fetch(`/posts/${id}`, {
                     method: 'DELETE',
+                     headers: {
+                        Authorization: "Nikita@me1311",
+
+                    }
                 });
                 alert('Post deleted successfully!');
                 window.location.reload(); // Reload the page after deletion
