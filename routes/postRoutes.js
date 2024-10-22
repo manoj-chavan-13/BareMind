@@ -23,6 +23,22 @@ router.post("/:id/like", async (req, res) => {
     res.status(500).json({ message: "Error liking post", error });
   }
 });
+router.post("/:id/dislike", async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const post = await Post.findById(postId);
+    if (!post) return res.status(404).json({ message: "Post not found" });
+
+    if (post.likes > 0) {
+      post.likes -= 1; // Decrement likes count
+    }
+    await post.save();
+    res.json({ likes: post.likes });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error disliking the post" });
+  }
+});
 
 router.post("/:id/comments", async (req, res) => {
   console.log("Request body:", req.body); // Log the entire request body
