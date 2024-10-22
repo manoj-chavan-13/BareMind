@@ -15,8 +15,7 @@ const DBURI = process.env.DBURI; // Get DBURI from .env
 const secretKey = "09122022Ber";
 const pass = "alwaysbare";
 const user = "131104NoDe";
-
-console.log(user);
+import subscriptionRoutes from "./routes/subscription.js";
 // Connect to MongoDB
 mongoose
   .connect(DBURI, {
@@ -34,6 +33,7 @@ app.use(express.static("public")); // Serve static files from the 'public' direc
 // Use blog routes
 app.use("/", blogRoutes);
 app.use("/posts", postRoutes);
+app.use("/v1/subscribe", subscriptionRoutes);
 // Serve the HTML file at the root route
 app.get("/", (req, res) => {
   res.sendFile(path.resolve("public", "index.html")); // Serve index.html directly

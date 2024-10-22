@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You for Subscribing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('https://firebasestorage.googleapis.com/v0/b/minta-mn.appspot.com/o/images%2Fbg-shape.jpg?alt=media&token=86c921ed-432d-4524-a683-ddac7d1986a0');
+            background-size: cover;
+            background-repeat: no-repeat;
+            opacity: 0.8;
+            z-index: -1;
+        }
+
+        .header {
+            background-image: url('https://firebasestorage.googleapis.com/v0/b/minta-mn.appspot.com/o/images%2Fbg-neon.jpg?alt=media&token=77140451-cd73-4454-ad9a-f11703d30867');
+            background-size: cover;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            /* Allow items to wrap */
+            padding: 20px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .message {
+            flex: 1 1 60%;
+            /* Allow this to take up 60% of the width */
+            padding-right: 20px;
+            font-size: smaller;
+        }
+
+        .image {
+            flex: 1 1 30%;
+            /* Allow this to take up 30% of the width */
+            text-align: center;
+            /* Center the image */
+            max-width: 100%;
+            /* Prevent overflow */
+            margin: 10px 0;
+            /* Add some margin for spacing */
+            position: relative;
+            /* For positioning the skeleton */
+        }
+
+        .image img {
+            max-width: 100%;
+            /* Scale image to fit */
+            height: auto;
+            /* Maintain aspect ratio */
+            border-radius: 5px;
+            display: none;
+            /* Initially hide the image */
+        }
+
+        .skeleton {
+            width: 100%;
+            /* Full width for skeleton */
+            height: 200px;
+            /* Set a height for the skeleton */
+            background-color: #e0e0e0;
+            /* Light grey color */
+            border-radius: 5px;
+            animation: pulse 1.5s infinite;
+            /* Pulse animation */
+        }
+
+        @keyframes pulse {
+            0% {
+                background-color: #e0e0e0;
+            }
+
+            50% {
+                background-color: #f0f0f0;
+                /* Slightly lighter color */
+            }
+
+            100% {
+                background-color: #e0e0e0;
+            }
+        }
+
+        .logo {
+            border-radius: 8px;
+            max-width: 30px;
+            height: auto;
+        }
+
+        .footer {
+            padding: 10px;
+            background-color: #f1f1f1;
+            text-align: center;
+            font-size: 0.9em;
+            color: #888;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            color: rgb(4, 0, 129);
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+            background-color: #ffffff;
+            border: 1px solid rgb(4, 0, 129);
+        }
+
+        .button:hover {
+            background-color: #f0f0f0;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .content {
+                flex-direction: column;
+                /* Stack items vertically */
+            }
+
+            .message {
+                padding-right: 0;
+                flex: 1 1 100%;
+                /* Allow this to take full width */
+            }
+
+            .image {
+                flex: 1 1 100%;
+                /* Allow this to take full width */
+                margin-bottom: 20px;
+                /* Add margin for spacing */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Thank You for Subscribing!</h1>
+        </div>
+        <div class="content">
+            <div class="message">
+                <p>Dear Subscriber,</p>
+                <p>Thank you for subscribing to our newsletter! We’re excited to have you join our community. Your
+                    interest means a lot to us.</p>
+                <p>As a subscriber, you’ll be the first to know about our latest updates, exclusive content, and special
+                    offers. We’re committed to providing you with valuable insights and resources that align with your
+                    interests.</p>
+                <a href="https://baremind-in.vercel.app/" class="button">Visit Our Website</a>
+            </div>
+            <div class="image">
+                <div class="skeleton"></div> <!-- Skeleton Loader -->
+                <img src="https://via.placeholder.com/150" alt="Low-Quality Thank You Image"
+                    data-src="https://firebasestorage.googleapis.com/v0/b/minta-mn.appspot.com/o/images%2Femail.jpg?alt=media&token=66cb2d3c-6f54-4263-ac4a-4721660021c5"
+                    onload="this.style.display='block'; this.previousElementSibling.style.display='none'; this.src=this.dataset.src;">
+            </div>
+        </div>
+        <div class="footer">
+            <img src="https://firebasestorage.googleapis.com/v0/b/minta-mn.appspot.com/o/images%2Flogo.jpeg?alt=media&token=9ff24e50-ea4d-40db-896e-9b70a78cb7d2"
+                alt="BareMind Logo" class="logo"> &ensp; <p>&copy; 2024 BareMind. All Rights Reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>
