@@ -42,7 +42,7 @@ app.use(express.static("public")); // Serve static files from the 'public' direc
 
 // Use blog routes
 app.use("/", blogRoutes);
-app.use("/posts", authenticate, postRoutes);
+app.use("/posts", postRoutes);
 app.use("/v1/subscribe", authenticate, subscriptionRoutes);
 // Serve the HTML file at the root route
 app.get("/", (req, res) => {

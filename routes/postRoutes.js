@@ -2,16 +2,27 @@ import express from "express";
 import { getAllPosts, getPostById } from "../controllers/postController.js";
 import Post from "../models/Post.js";
 const router = express.Router();
+import dotenv from "dotenv";
+
+// Load environment variables from .env file
+dotenv.config();
 
 // Route to create a new post (for POST requests to `/posts`)
+function authenticate(req, res, next) {
+  const password = req.headers["authorization"]; // Get password from Authorization header
+  if (!password || password !== process.env.PERSONALPASSWORD) {
+    return res.status(403).json({ message: "Forbidden: Invalid password" });
+  }
+  next();
+}
 
 // Route to get all posts (for GET requests to `/`)
-router.get("/", getAllPosts);
+router.get("/", authenticate, getAllPosts);
 
 // Route to get a specific post by ID (for GET requests to `/posts/:id`)
-router.get("/:id", getPostById);
+router.get("/:id", authenticate, getPostById);
 
-router.post("/:id/like", async (req, res) => {
+router.post("/:id/like", authenticate, async (req, res) => {
   try {
     const post = await Post.findByIdAndUpdate(
       req.params.id,
@@ -23,7 +34,7 @@ router.post("/:id/like", async (req, res) => {
     res.status(500).json({ message: "Error liking post", error });
   }
 });
-router.post("/:id/dislike", async (req, res) => {
+router.post("/:id/dislike", authenticate, async (req, res) => {
   try {
     const postId = req.params.id;
     const post = await Post.findById(postId);
@@ -40,7 +51,7 @@ router.post("/:id/dislike", async (req, res) => {
   }
 });
 
-router.post("/:id/comments", async (req, res) => {
+router.post("/:id/comments", authenticate, async (req, res) => {
   console.log("Request body:", req.body); // Log the entire request body
 
   const { content } = req.body; // Expect content in the request body
@@ -65,7 +76,7 @@ router.post("/:id/comments", async (req, res) => {
 });
 
 // Route to like a post (for POST requests to `/posts/:id/like`)
-router.post("/:id/view", async (req, res) => {
+router.post("/:id/view", authenticate, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     if (!post) return res.status(404).send("Post not found");
