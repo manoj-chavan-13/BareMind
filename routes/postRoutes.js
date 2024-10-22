@@ -22,32 +22,34 @@ router.get("/", authenticate, getAllPosts);
 // Route to get a specific post by ID (for GET requests to `/posts/:id`)
 router.get("/:id", authenticate, getPostById);
 
-router.post("/:id/like", authenticate, async (req, res) => {
+// Route to like a post (for PUT requests to `/posts/:id/like`)
+router.put("/:id/like", authenticate, async (req, res) => {
   try {
     const post = await Post.findByIdAndUpdate(
       req.params.id,
-      { $inc: { likes: 1 } }, // Directly update the likes field
-      { new: true }
+      { $inc: { likes: 1 } }, // Increment likes by 1
+      { new: true } // Return the updated post
     );
+    if (!post) return res.status(404).json({ message: "Post not found" });
     res.status(200).json(post);
   } catch (error) {
     res.status(500).json({ message: "Error liking post", error });
   }
 });
-router.post("/:id/dislike", authenticate, async (req, res) => {
+
+// Route to dislike a post (for PUT requests to `/posts/:id/dislike`)
+router.put("/:id/dislike", authenticate, async (req, res) => {
   try {
-    const postId = req.params.id;
-    const post = await Post.findById(postId);
+    const post = await Post.findById(req.params.id);
     if (!post) return res.status(404).json({ message: "Post not found" });
 
     if (post.likes > 0) {
-      post.likes -= 1; // Decrement likes count
+      post.likes -= 1; // Decrement likes by 1
+      await post.save();
     }
-    await post.save();
-    res.json({ likes: post.likes });
+    res.status(200).json(post);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error disliking the post" });
+    res.status(500).json({ message: "Error disliking the post", error });
   }
 });
 
