@@ -19,7 +19,7 @@ import subscriptionRoutes from "./routes/subscription.js";
 // Connect to MongoDB
 
 function authenticate(req, res, next) {
-  const password = req.headers["authorization"]; // Get password from Authorization header
+  const password = req.headers["Authorization"]; // Get password from Authorization header
   if (!password || password !== process.env.PERSONALPASSWORD) {
     return res.status(403).json({ message: "Forbidden: Invalid password" });
   }
@@ -35,7 +35,14 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Middleware
-app.use(cors());
+
+app.use(
+  cors({
+    origin: "https://baremind-in.vercel.app/", // Change to your React app's URL
+    methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed methods
+    allowedHeaders: ["Authorization", "Content-Type"], // Specify allowed headers
+  })
+);
 app.use(bodyParser.json());
 app.use(express.static("public")); // Serve static files from the 'public' directory
 
