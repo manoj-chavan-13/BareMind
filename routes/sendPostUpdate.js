@@ -4,7 +4,6 @@ import nodemailer from "nodemailer";
 import Subscription from "../models/Subscription.js";
 import dotenv from "dotenv";
 
-// Load environment variables from .env file
 dotenv.config();
 
 // Nodemailer setup

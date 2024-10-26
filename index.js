@@ -17,7 +17,7 @@ const pass = "alwaysbare";
 const user = "131104NoDe";
 import subscriptionRoutes from "./routes/subscription.js";
 // Connect to MongoDB
-app.use(cors({ origin: "https://baremind-in.vercel.app" }));
+app.use(cors({ origin: "https://baremind.vercel.app" }));
 
 function authenticate(req, res, next) {
   const password = req.headers["authorization"]; // Get password from Authorization header
