@@ -22,6 +22,7 @@ app.use(
     origin: [
       "https://baremind.vercel.app",
       "https://baremind.fun",
+      "https://www.baremind.fun",
       "http://localhost:3000",
     ],
   })
