@@ -24,6 +24,7 @@ app.use(
       "https://baremind.fun",
       "https://www.baremind.fun",
       "http://localhost:3000",
+      "http://localhost:5173"
     ],
   })
 );
