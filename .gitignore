@@ -1,0 +1,101 @@
+# =============================================================================
+# ROOT LEVEL - CREDENTIALS & SECRETS (NEVER COMMIT)
+# =============================================================================
+.env
+*.env
+.env.*
+!.env.example
+
+# Test/debug files in root
+test.png
+test_like.py
+test_upload.py
+
+# Uploads (user-generated content)
+uploads/
+
+# =============================================================================
+# BACKEND
+# =============================================================================
+backend/venv/
+backend/.venv/
+venv/
+.venv/
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+
+*.egg
+*.egg-info/
+dist/
+build/
+
+.pytest_cache/
+
+*.log
+*.sqlite3
+*.db
+
+# Backend secrets - NEVER COMMIT
+backend/.env
+backend/*.env
+backend/uploads/
+
+# One-off debug/seed scripts
+backend/auto_categorize_existing_blogs.py
+backend/auto_tag_existing_blogs.py
+backend/check_likes.py
+backend/fix_s3.py
+backend/seed_trending_blogs.py
+backend/test_auto_categorizer.py
+backend/test_auto_tagger.py
+backend/test_blogs.py
+backend/test_bookmarks.py
+backend/test_feed_ranking.py
+backend/test_full_architecture.py
+backend/test_security.py
+backend/test_single_session.py
+backend/test_redis_zincrby.py
+
+# =============================================================================
+# FRONTEND
+# =============================================================================
+frontend/node_modules/
+node_modules/
+frontend/dist/
+frontend/build/
+frontend/.next/
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.production.local
+*.tsbuildinfo
+
+# =============================================================================
+# IDE / EDITOR
+# =============================================================================
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# =============================================================================
+# DOCKER
+# =============================================================================
+docker-compose.override.yml
+docker-compose.local.yml
+
+# =============================================================================
+# SECURITY
+# =============================================================================
+*.pem
+*.key
+*.crt
+*.cert
+*.p12
+*.pfx
