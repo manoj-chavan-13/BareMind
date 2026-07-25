@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+@plugin "tailwindcss-animate";
+
+@theme {
+  /* ── Fonts ── */
+  --font-sans: "Quicksand", sans-serif;
+
+  /* ── BareMind Brand Colors (extracted from official logo) ── */
+  /* Primary: coral salmon from "mind" wordmark & Bm icon  */
+  --color-brand: #f07060;
+  --color-brand-light: #ffaa80;
+  --color-brand-dark: #d95a4a;
+  --color-charcoal: #404040;
+  --color-charcoal-light: #5a5a5a;
+
+  /* Semantic color aliases */
+  --color-primary: #f07060;
+  --color-primary-foreground: #ffffff;
+  --color-primary-hover: #d95a4a;
+
+  --color-secondary: #fff5f3;
+  --color-secondary-foreground: #404040;
+
+  --color-background: #ffffff;
+  --color-foreground: #404040;
+
+  --color-card: #ffffff;
+  --color-card-foreground: #404040;
+
+  --color-popover: #ffffff;
+  --color-popover-foreground: #404040;
+
+  --color-muted: #fdf5f4;
+  --color-muted-foreground: #8a8a8a;
+
+  --color-accent: #fff5f3;
+  --color-accent-foreground: #404040;
+
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
+
+  --color-border: #f0e8e6;
+  --color-input: #f5eeec;
+  --color-ring: #f07060;
+
+  --color-surface: #fdf8f7;
+  --color-surface-hover: #faf0ee;
+
+  /* ── Border Radius ── */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+
+  /* ── Animations ── */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height); }
+  }
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height); }
+    to { height: 0; }
+  }
+}
+
+/* ── Base Styles ── */
+@layer base {
+  *, *::before, *::after {
+    border-color: var(--color-border);
+    box-sizing: border-box;
+  }
+
+  /* Hide scrollbars globally but preserve scrolling functionality */
+  * {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+  
+  *::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Opera */
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: "Quicksand", sans-serif;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: "Quicksand", sans-serif;
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    color: var(--color-charcoal);
+  }
+}
