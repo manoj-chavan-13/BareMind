@@ -30,7 +30,6 @@ import Settings from "./pages/profile/Settings"
 import Topics from "./pages/explore/Topics"
 import TopicDetail from "./pages/explore/TopicDetail"
 import Writers from "./pages/explore/Writers"
-import Community from "./pages/explore/Community"
 
 import { useAutoTracker } from "./hooks/useAutoTracker"
 
@@ -177,7 +176,6 @@ function App() {
           <Route path="/topics" element={<Topics />} />
           <Route path="/topics/:slug" element={<TopicDetail />} />
           <Route path="/writers" element={<Writers />} />
-          <Route path="/community" element={<Community />} />
 
           {/* Public profile pages — viewable without login (e.g. /u/manojchavan) */}
           <Route path="/u/:username" element={<Profile />} />

@@ -75,11 +75,6 @@ export default function Navbar() {
         icon: User,
       },
       {
-        name: "Community",
-        path: "/community",
-        icon: Globe,
-      },
-      {
         name: "Dashboard",
         path: "/dashboard",
         icon: LayoutDashboard,
@@ -101,10 +96,6 @@ export default function Navbar() {
       {
         name: "Writers",
         path: "/writers",
-      },
-      {
-        name: "Community",
-        path: "/community",
       },
     ]
 
