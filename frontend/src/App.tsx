@@ -145,8 +145,42 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-slate-800" />
+      <div className="min-h-screen bg-[#FCFCFB] flex flex-col">
+        {/* Fake Navbar Skeleton */}
+        <header className="h-[73px] border-b border-slate-200/80 bg-white flex items-center px-4 sm:px-6 lg:px-8 justify-between">
+          <div className="w-32 h-6 bg-slate-200 rounded-md animate-pulse" />
+          <div className="flex items-center gap-4">
+            <div className="hidden sm:block w-48 h-10 bg-slate-100 rounded-full animate-pulse" />
+            <div className="w-8 h-8 rounded-full bg-slate-200 animate-pulse" />
+            <div className="w-8 h-8 rounded-full bg-slate-200 animate-pulse" />
+          </div>
+        </header>
+
+        {/* Fake Body Skeleton */}
+        <div className="flex-1 max-w-[1200px] w-full mx-auto px-4 py-8 sm:px-6 lg:px-8 lg:py-10 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-12">
+          
+          <div className="space-y-12">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="flex flex-col gap-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-slate-200 animate-pulse" />
+                  <div className="w-24 h-3 bg-slate-200 rounded animate-pulse" />
+                </div>
+                <div className="w-3/4 h-7 bg-slate-200 rounded animate-pulse mt-2" />
+                <div className="w-full h-4 bg-slate-100 rounded animate-pulse" />
+                <div className="w-5/6 h-4 bg-slate-100 rounded animate-pulse" />
+                <div className="w-full h-[250px] bg-slate-100 rounded-xl animate-pulse mt-4" />
+              </div>
+            ))}
+          </div>
+
+          <div className="hidden lg:block space-y-8">
+            <div className="w-full h-48 bg-slate-100 rounded-2xl animate-pulse" />
+            <div className="w-full h-64 bg-slate-100 rounded-2xl animate-pulse" />
+            <div className="w-full h-32 bg-slate-100 rounded-2xl animate-pulse" />
+          </div>
+
+        </div>
       </div>
     )
   }
