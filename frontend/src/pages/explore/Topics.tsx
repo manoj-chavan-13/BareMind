@@ -1023,7 +1023,7 @@ export default function Topics() {
      LOADING
   ======================================================= */
 
-  if (loading) {
+  if (loading && categories.length === 0 && !debouncedQuery) {
     return <TopicsSkeleton />
   }
 

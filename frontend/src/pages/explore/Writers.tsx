@@ -246,7 +246,7 @@ export default function Writers() {
     )
     .slice(0, 5)
 
-  if (loading && writers.length === 0) {
+  if (loading && writers.length === 0 && !debouncedSearch) {
     return <ConnectionsSkeleton />
   }
 
