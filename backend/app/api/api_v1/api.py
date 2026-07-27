@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from app.api.api_v1.endpoints import (
     auth, users, blogs, taxonomy, interactions, uploads, feed,
-    notifications, analytics, search, ws
+    notifications, analytics, search, ws, telemetry
 )
 
 api_router = APIRouter()
@@ -16,3 +16,4 @@ api_router.include_router(notifications.router, prefix="/notifications", tags=["
 api_router.include_router(analytics.router, prefix="/analytics", tags=["analytics"])
 api_router.include_router(search.router, prefix="/search", tags=["search"])
 api_router.include_router(ws.router, prefix="/ws", tags=["websocket"])
+api_router.include_router(telemetry.router, prefix="/telemetry", tags=["telemetry"])

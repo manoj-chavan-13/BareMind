@@ -30,6 +30,7 @@ class Settings(BaseSettings):
     KAFKA_BOOTSTRAP_SERVERS: str = "localhost:9092"
     KAFKA_NOTIFICATIONS_TOPIC: str = "notifications"
     KAFKA_SEARCH_TOPIC: str = "search_indexing"
+    KAFKA_TELEMETRY_TOPIC: str = "telemetry_events"
 
     # Meilisearch
     MEILISEARCH_URL: str = "http://localhost:7700"

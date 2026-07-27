@@ -32,6 +32,8 @@ import TopicDetail from "./pages/explore/TopicDetail"
 import Writers from "./pages/explore/Writers"
 import Community from "./pages/explore/Community"
 
+import { useAutoTracker } from "./hooks/useAutoTracker"
+
 function ScrollToTop() {
   const { pathname } = useLocation();
 
@@ -39,6 +41,11 @@ function ScrollToTop() {
     window.scrollTo(0, 0);
   }, [pathname]);
 
+  return null;
+}
+
+function TelemetryTracker() {
+  useAutoTracker();
   return null;
 }
 
@@ -147,6 +154,7 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
+      <TelemetryTracker />
 
       {/* Global real-time notification toast container */}
       <NotificationToastContainer />
