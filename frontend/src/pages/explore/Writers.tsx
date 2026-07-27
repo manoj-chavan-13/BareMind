@@ -87,20 +87,33 @@ export default function Writers() {
      DEBOUNCE SEARCH
   ======================================================= */
   useEffect(() => {
+    if (!search.trim()) {
+      setDebouncedSearch("")
+      setSuggestions([])
+      return
+    }
+
+    const controller = new AbortController()
     const handler = setTimeout(() => {
-      setDebouncedSearch(search)
-      if (search.length > 0) {
-        searchService.getSuggestions(search, "users").then(res => {
+      const query = search.trim()
+      if (query.length >= 2) {
+        searchService.getSuggestions(query, "users", controller.signal).then(res => {
           setSuggestions(res.suggestions || [])
         }).catch(err => {
-          console.error("Failed to fetch suggestions", err)
-          setSuggestions([])
+          if (err.name !== 'CanceledError' && err.message !== 'canceled') {
+            console.error("Failed to fetch suggestions", err)
+            setSuggestions([])
+          }
         })
       } else {
         setSuggestions([])
       }
-    }, 300)
-    return () => clearTimeout(handler)
+    }, 200)
+
+    return () => {
+      clearTimeout(handler)
+      controller.abort()
+    }
   }, [search])
 
   /* =======================================================
@@ -377,7 +390,9 @@ export default function Writers() {
                         key={idx}
                         onMouseDown={(e) => {
                           e.preventDefault()
-                          setSearch(suggestion.replace('@', ''))
+                          const val = suggestion.replace('@', '')
+                          setSearch(val)
+                          setDebouncedSearch(val)
                           setShowSuggestions(false)
                         }}
                         className="px-4 py-2 hover:bg-slate-50 cursor-pointer flex items-center gap-3 text-sm font-medium text-slate-700 transition-colors"

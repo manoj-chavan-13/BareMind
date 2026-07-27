@@ -718,10 +718,31 @@ export default function Topics() {
   const [showSuggestions, setShowSuggestions] =
     useState(false)
 
+  const [suggestions, setSuggestions] = useState<Category[]>([])
+
   useEffect(() => {
+    if (!searchQuery.trim()) {
+      setDebouncedQuery("")
+      setSuggestions([])
+      return
+    }
+
     const handler = setTimeout(() => {
-      setDebouncedQuery(searchQuery)
-    }, 300)
+      const query = searchQuery.trim()
+      if (query.length >= 2) {
+        taxonomyService.getCategories(query)
+          .then(res => {
+            setSuggestions(Array.isArray(res) ? res : [])
+          })
+          .catch(err => {
+            console.error("Failed to fetch topic suggestions", err)
+            setSuggestions([])
+          })
+      } else {
+        setSuggestions([])
+      }
+    }, 200)
+
     return () => clearTimeout(handler)
   }, [searchQuery])
 
@@ -1200,19 +1221,20 @@ export default function Topics() {
 
                 {/* Suggestions Dropdown */}
                 <AnimatePresence>
-                  {showSuggestions && searchQuery && searchResults.length > 0 && (
+                  {showSuggestions && searchQuery && suggestions.length > 0 && (
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       className="absolute z-50 w-full mt-2 bg-white rounded-xl shadow-lg border border-slate-200 py-2 max-h-60 overflow-y-auto"
                     >
-                      {searchResults.slice(0, 5).map((category, idx) => (
+                      {suggestions.slice(0, 5).map((category, idx) => (
                         <div
                           key={idx}
                           onMouseDown={(e) => {
                             e.preventDefault()
                             setSearchQuery(category.name)
+                            setDebouncedQuery(category.name)
                             setShowSuggestions(false)
                           }}
                           className="px-4 py-2 hover:bg-slate-50 cursor-pointer flex items-center gap-3 text-sm font-medium text-slate-700 transition-colors"
@@ -1231,7 +1253,7 @@ export default function Topics() {
                 DOMAIN NAVIGATION
             =============================================== */}
 
-            {!searchQuery.trim() && (
+            {!debouncedQuery.trim() && (
               <nav
                 className="
                   flex
@@ -1286,10 +1308,10 @@ export default function Topics() {
               SEARCH MODE
           =============================================== */}
 
-          {searchQuery.trim() ? (
+          {debouncedQuery.trim() ? (
             <SearchMode
-              query={searchQuery}
-              results={searchResults}
+              query={debouncedQuery}
+              results={categories}
               onFollow={
                 handleFollowToggle
               }
