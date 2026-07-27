@@ -30,6 +30,7 @@ import Settings from "./pages/profile/Settings"
 import Topics from "./pages/explore/Topics"
 import TopicDetail from "./pages/explore/TopicDetail"
 import Writers from "./pages/explore/Writers"
+import NotFound from "./pages/error/NotFound"
 
 import { useAutoTracker } from "./hooks/useAutoTracker"
 
@@ -192,6 +193,9 @@ function App() {
             {/* Fallback for old notifications route */}
             <Route path="/notifications" element={<Navigate to="/dashboard" replace />} />
           </Route>
+          
+          {/* Catch-all 404 Route */}
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </Router>
