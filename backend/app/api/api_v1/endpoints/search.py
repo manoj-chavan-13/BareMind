@@ -3,6 +3,9 @@ from fastapi import APIRouter, Depends, Query, BackgroundTasks
 import meilisearch
 import asyncio
 
+from app.api import deps
+from app.models.user import User
+
 from app.core.config import settings
 from app.services.search_publisher import publish_search_event
 from app.core.redis_client import redis_client
@@ -19,6 +22,7 @@ async def search_all(
     limit: int = 20,
     type: Optional[str] = Query(None, description="Type of search: 'users' or 'blogs'"),
     client: meilisearch.Client = Depends(get_meilisearch_client),
+    current_user: Optional[User] = Depends(deps.get_current_user_optional),
 ) -> Any:
     """
     Full-text & fuzzy search across published blogs, authors using Meilisearch.
@@ -29,12 +33,15 @@ async def search_all(
 
     # Publish query for analytics (trending keywords)
     if len(clean_q) > 2:
+        payload = {"query": clean_q}
+        if current_user:
+            payload["user_id"] = str(current_user.id)
         background_tasks.add_task(
             publish_search_event,
             "query",
             "search_queries",
             clean_q,
-            {"query": clean_q}
+            payload
         )
 
     # Search Blogs
@@ -101,6 +108,7 @@ class SearchTrackRequest(BaseModel):
 async def track_search(
     request: SearchTrackRequest,
     background_tasks: BackgroundTasks,
+    current_user: Optional[User] = Depends(deps.get_current_user_optional),
 ) -> Any:
     """Track search clicks and queries to improve ML suggestions."""
     clean_q = request.query.strip()
@@ -108,6 +116,8 @@ async def track_search(
         payload = {"query": clean_q}
         if request.blog_id:
             payload["blog_id"] = request.blog_id
+        if current_user:
+            payload["user_id"] = str(current_user.id)
         
         background_tasks.add_task(
             publish_search_event,
@@ -121,21 +131,30 @@ async def track_search(
 @router.get("/suggestions")
 async def get_search_suggestions(
     q: Optional[str] = Query("", description="Search query string"),
+    current_user: Optional[User] = Depends(deps.get_current_user_optional),
 ) -> Any:
     """Fast auto-complete keyword suggestions ranked by ML heuristic in Redis."""
     clean_q = q.strip().lower() if q else ""
     suggestions = []
 
     try:
+        # Fetch personal recent searches first if authenticated
+        personal_history = []
+        if current_user:
+            history_str = await redis_client.zrevrange(f"user:{current_user.id}:recent_searches", 0, 10)
+            personal_history = list(history_str) if history_str else []
+
         # Fetch top 200 trending searches from Redis
-        trending_bytes = await redis_client.zrevrange("trending:searches", 0, 200)
-        all_trending = [b.decode("utf-8") for b in trending_bytes]
+        trending_str = await redis_client.zrevrange("trending:searches", 0, 200)
+        all_trending = list(trending_str) if trending_str else []
         
         if clean_q:
             # Filter in-memory for prefix match
-            suggestions = [term for term in all_trending if term.startswith(clean_q)]
+            personal_matches = [term for term in personal_history if term.startswith(clean_q)]
+            global_matches = [term for term in all_trending if term.startswith(clean_q) and term not in personal_matches]
+            suggestions = personal_matches + global_matches
         else:
-            suggestions = all_trending
+            suggestions = personal_history + [term for term in all_trending if term not in personal_history]
 
         # If not enough suggestions from prefix, do an infix match to backfill
         if clean_q and len(suggestions) < 8:

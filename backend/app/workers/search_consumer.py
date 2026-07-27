@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+import time
 from aiokafka import AIOKafkaConsumer
 import meilisearch
 
@@ -84,8 +85,15 @@ class SearchConsumer:
                     score = queries + (clicks * 5)
                     
                     # Update trending:searches sorted set
-                    # Update trending:searches sorted set
                     await redis_client.zadd("trending:searches", {query_lower: score})
+
+                    # Track personalized search history
+                    user_id = payload.get("user_id") if payload else None
+                    if user_id:
+                        history_key = f"user:{user_id}:recent_searches"
+                        await redis_client.zadd(history_key, {query_lower: time.time()})
+                        await redis_client.zremrangebyrank(history_key, 0, -21)
+                        logger.debug(f"SearchConsumer: updated search history for user {user_id}")
                     
             elif action in ("blog_view", "blog_like", "blog_comment", "blog_bookmark"):
                 if doc_id:

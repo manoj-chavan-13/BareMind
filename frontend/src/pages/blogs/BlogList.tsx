@@ -83,20 +83,36 @@ export default function BlogList({
 
   // Debounce search input for autocomplete
   useEffect(() => {
+    // Automatically clear the search feed if the input is completely erased
+    if (!search.trim()) {
+      setDebouncedSearch("")
+      setSuggestions([])
+      return
+    }
+
+    const controller = new AbortController()
     const handler = setTimeout(() => {
-      setDebouncedSearch(search)
-      if (search.length > 0) {
-        searchService.getSuggestions(search, "blogs").then(res => {
+      // Do NOT setDebouncedSearch here for general queries, that triggers a full feed fetch.
+      // Only fetch suggestions.
+      const query = search.trim()
+      if (query.length >= 2) {
+        searchService.getSuggestions(query, "blogs", controller.signal).then(res => {
           setSuggestions(res.suggestions || [])
         }).catch(err => {
-          console.error("Failed to fetch suggestions", err)
-          setSuggestions([])
+          if (err.name !== 'CanceledError' && err.message !== 'canceled') {
+            console.error("Failed to fetch suggestions", err)
+            setSuggestions([])
+          }
         })
       } else {
         setSuggestions([])
       }
-    }, 300)
-    return () => clearTimeout(handler)
+    }, 200)
+    
+    return () => {
+      clearTimeout(handler)
+      controller.abort()
+    }
   }, [search])
   const [selectedCategory, setSelectedCategory] = useState("All")
   const [selectedTag, setSelectedTag] = useState<string | null>(null)

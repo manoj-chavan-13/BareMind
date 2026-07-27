@@ -8,10 +8,10 @@ export const searchService = {
     return response.data
   },
 
-  getSuggestions: async (q: string, type?: "users" | "blogs") => {
+  getSuggestions: async (q: string, type?: "users" | "blogs", signal?: AbortSignal) => {
     let url = `/search/suggestions?q=${encodeURIComponent(q)}`
     if (type) url += `&type=${type}`
-    const response = await api.get(url)
+    const response = await api.get(url, { signal })
     return response.data
   },
 
